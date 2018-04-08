@@ -1,0 +1,72 @@
+pcm.plug_output {
+	type plug
+	slave.pcm output
+}
+
+pcm.output {
+	type softvol
+	slave.pcm "both"
+	control.name "Softmaster"
+	control.card 1
+}
+
+ctl.output {
+	type hw
+	card 1
+}
+
+pcm.both {
+	type route
+	slave.pcm {
+		type multi
+		slaves.a.pcm "hw:1"
+		slaves.a.channels 2
+
+		slaves.b.pcm "loop"
+		slaves.b.channels 2
+
+		bindings.0.slave a
+		bindings.0.channel 0
+		bindings.1.slave a
+		bindings.1.channel 1
+		bindings.2.slave b
+		bindings.2.channel 0
+		bindings.3.slave b
+		bindings.3.channel 1
+	}
+
+	ttable.0.0 1
+	ttable.1.1 1
+	ttable.0.2 1
+	ttable.1.3 1
+}
+
+ctl.both {
+	type hw
+}
+
+# output device
+pcm.loopout {
+    type dmix
+    ipc_key 328211
+    slave.pcm "hw:Loopback,0,0"
+}
+
+# input device
+pcm.loopin {
+    type dsnoop
+    ipc_key 686592
+    slave.pcm "hw:Loopback,1,0"
+}
+
+# duplex plug device
+pcm.loop {
+    type plug
+    slave {
+      pcm {
+         type asym
+         playback.pcm "loopout"
+         capture.pcm "loopin"
+      }
+    }
+}

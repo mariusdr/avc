@@ -4,8 +4,6 @@
 
 #include <boost/program_options.hpp>
 namespace bpo = boost::program_options;
-#include <boost/thread.hpp>
-#include <boost/type_traits.hpp>
 #include <alsa/asoundlib.h>
 
 #if 0
@@ -26,7 +24,7 @@ public:
 
 	VolumeController(snd_mixer_t* mixer_handle, snd_mixer_elem_t* mixer_elem_handle,
 					 long base_volume, long max_volume,
-					 float filter_coeff = 0.2f, float peak_decay = 1.f, bool verbose = false):
+					 float filter_coeff = 0.5f, float peak_decay = 1.f, bool verbose = false):
 		mixer_handle(mixer_handle), mixer_elem_handle(mixer_elem_handle),
 		base_volume(base_volume), max_volume(max_volume),
 		capture_fstore(0.f), looprec_fstore(0.f),
